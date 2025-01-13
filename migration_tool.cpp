@@ -180,7 +180,7 @@ void writeNewState(const std::string& filename) {
     outfile.write(reinterpret_cast<const char*>(&fullyUnlocker), sizeof(HistoryInfo) * fullyUnlocker.capacity());
     outfile.write(reinterpret_cast<const char*>(&_earlyUnlockedCnt), sizeof(_earlyUnlockedCnt));
     outfile.write(reinterpret_cast<const char*>(&_fullyUnlockedCnt), sizeof(_fullyUnlockedCnt));
-    outfile.write(reinterpret_cast<const char*>(&statsInfo), sizeof(statsInfo));
+    outfile.write(reinterpret_cast<const char*>(&statsInfo), sizeof(StatsInfo) * statsInfo.capacity());
 
     if (!outfile) {
         throw std::runtime_error("Failed to write id to the file.");
