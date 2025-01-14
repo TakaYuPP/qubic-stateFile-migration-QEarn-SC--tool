@@ -92,7 +92,7 @@ public:
 
 // Divide a by b, but return 0 if b is 0 (rounding to lower magnitude in case of integers)
 template <typename T>
-inline static T div(T a, T b)
+inline static T safe_div(T a, T b)
 {
     return (b == 0) ? 0 : (a / b);
 }
@@ -212,33 +212,33 @@ int main() {
             We did not save the metrics data for epoch 138, 139, 140, 141, 142, 143.
             So we need to save the data in here.
         */
-        initializedStats.burnedAmount = div((_initialRoundInfo.get(138)._epochBonusAmount - _currentRoundInfo.get(138)._epochBonusAmount), QEARN_BURN_PERCENT_4_7 + QEARN_EARLY_UNLOCKING_PERCENT_4_7) * QEARN_BURN_PERCENT_4_7;
-        initializedStats.rewardedAmount = div((_initialRoundInfo.get(138)._epochBonusAmount - _currentRoundInfo.get(138)._epochBonusAmount), QEARN_BURN_PERCENT_4_7 + QEARN_EARLY_UNLOCKING_PERCENT_4_7) * QEARN_EARLY_UNLOCKING_PERCENT_4_7;
-        initializedStats.boostedAmount = div((_initialRoundInfo.get(138)._epochBonusAmount - _currentRoundInfo.get(138)._epochBonusAmount), QEARN_BURN_PERCENT_4_7 + QEARN_EARLY_UNLOCKING_PERCENT_4_7) * (100 - QEARN_BURN_PERCENT_4_7 - QEARN_EARLY_UNLOCKING_PERCENT_4_7);
+        initializedStats.burnedAmount = safe_div((_initialRoundInfo.get(138)._epochBonusAmount - _currentRoundInfo.get(138)._epochBonusAmount), QEARN_BURN_PERCENT_4_7 + QEARN_EARLY_UNLOCKING_PERCENT_4_7) * QEARN_BURN_PERCENT_4_7;
+        initializedStats.rewardedAmount = safe_div((_initialRoundInfo.get(138)._epochBonusAmount - _currentRoundInfo.get(138)._epochBonusAmount), QEARN_BURN_PERCENT_4_7 + QEARN_EARLY_UNLOCKING_PERCENT_4_7) * QEARN_EARLY_UNLOCKING_PERCENT_4_7;
+        initializedStats.boostedAmount = safe_div((_initialRoundInfo.get(138)._epochBonusAmount - _currentRoundInfo.get(138)._epochBonusAmount), QEARN_BURN_PERCENT_4_7 + QEARN_EARLY_UNLOCKING_PERCENT_4_7) * (100 - QEARN_BURN_PERCENT_4_7 - QEARN_EARLY_UNLOCKING_PERCENT_4_7);
 
         statsInfo.set(138, initializedStats);
 
         initializedStats.burnedAmount = 0;
         initializedStats.rewardedAmount = 0;
-        initializedStats.boostedAmount = div(div(_currentRoundInfo.get(139)._epochBonusAmount * 10000000ULL, _currentRoundInfo.get(139)._totalLockedAmount) * (_initialRoundInfo.get(139)._totalLockedAmount - _currentRoundInfo.get(139)._totalLockedAmount), 10000000ULL);
+        initializedStats.boostedAmount = safe_div(safe_div(_currentRoundInfo.get(139)._epochBonusAmount * 10000000ULL, _currentRoundInfo.get(139)._totalLockedAmount) * (_initialRoundInfo.get(139)._totalLockedAmount - _currentRoundInfo.get(139)._totalLockedAmount), 10000000ULL);
 
         statsInfo.set(139, initializedStats);
 
         initializedStats.burnedAmount = 0;
         initializedStats.rewardedAmount = 0;
-        initializedStats.boostedAmount = div(div(_currentRoundInfo.get(140)._epochBonusAmount * 10000000ULL, _currentRoundInfo.get(140)._totalLockedAmount) * (_initialRoundInfo.get(140)._totalLockedAmount - _currentRoundInfo.get(140)._totalLockedAmount), 10000000ULL);
+        initializedStats.boostedAmount = safe_div(safe_div(_currentRoundInfo.get(140)._epochBonusAmount * 10000000ULL, _currentRoundInfo.get(140)._totalLockedAmount) * (_initialRoundInfo.get(140)._totalLockedAmount - _currentRoundInfo.get(140)._totalLockedAmount), 10000000ULL);
 
         statsInfo.set(140, initializedStats);
 
         initializedStats.burnedAmount = 0;
         initializedStats.rewardedAmount = 0;
-        initializedStats.boostedAmount = div(div(_currentRoundInfo.get(141)._epochBonusAmount * 10000000ULL, _currentRoundInfo.get(141)._totalLockedAmount) * (_initialRoundInfo.get(141)._totalLockedAmount - _currentRoundInfo.get(141)._totalLockedAmount), 10000000ULL);
+        initializedStats.boostedAmount = safe_div(safe_div(_currentRoundInfo.get(141)._epochBonusAmount * 10000000ULL, _currentRoundInfo.get(141)._totalLockedAmount) * (_initialRoundInfo.get(141)._totalLockedAmount - _currentRoundInfo.get(141)._totalLockedAmount), 10000000ULL);
 
         statsInfo.set(141, initializedStats);
 
         initializedStats.burnedAmount = 0;
         initializedStats.rewardedAmount = 0;
-        initializedStats.boostedAmount = div(div(_currentRoundInfo.get(142)._epochBonusAmount * 10000000ULL, _currentRoundInfo.get(142)._totalLockedAmount) * (_initialRoundInfo.get(142)._totalLockedAmount - _currentRoundInfo.get(142)._totalLockedAmount), 10000000ULL);
+        initializedStats.boostedAmount = safe_div(safe_div(_currentRoundInfo.get(142)._epochBonusAmount * 10000000ULL, _currentRoundInfo.get(142)._totalLockedAmount) * (_initialRoundInfo.get(142)._totalLockedAmount - _currentRoundInfo.get(142)._totalLockedAmount), 10000000ULL);
 
         statsInfo.set(142, initializedStats);
 
