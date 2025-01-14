@@ -91,8 +91,8 @@ public:
 
 
 // Divide a by b, but return 0 if b is 0 (rounding to lower magnitude in case of integers)
-template <typename T>
-inline static T safe_div(T a, T b)
+template <typename T1, typename T2>
+inline static auto safe_div(T1 a, T2 b) -> decltype(a / b)
 {
     return (b == 0) ? 0 : (a / b);
 }
