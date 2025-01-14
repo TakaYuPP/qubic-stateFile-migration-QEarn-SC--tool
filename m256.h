@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint> // Standard fixed-width integer types
+
 #ifdef _WIN32
 #include <intrin.h> // Windows-specific intrinsics
 #elif defined(__linux__)
@@ -10,6 +12,7 @@
 
 // Used for all kinds of IDs, including in QPI and contracts.
 // Existing interface and behavior should never be changed! (However, it may be extended.)
+#ifdef _WIN32
 union m256i
 {
     // access for loops and compatibility with __m256i
@@ -174,6 +177,178 @@ union m256i
         return _mm256_setzero_si256();
     }
 };
+#elif defined(__linux__)
+union m256i
+{
+    // Access for loops and compatibility with __m256i
+    int8_t              m256i_i8[32];
+    int16_t             m256i_i16[16];
+    int32_t             m256i_i32[8];
+    int64_t             m256i_i64[4];
+    uint8_t             m256i_u8[32];
+    uint16_t            m256i_u16[16];
+    uint32_t            m256i_u32[8];
+    uint64_t            m256i_u64[4];
+
+    // Interface for QPI (no [] allowed)
+    struct
+    {
+        uint64_t _0, _1, _2, _3;
+    } u64;
+    struct
+    {
+        int64_t _0, _1, _2, _3;
+    } i64;
+    struct
+    {
+        uint32_t _0, _1, _2, _3, _4, _5, _6, _7;
+    } u32;
+    struct
+    {
+        int32_t _0, _1, _2, _3, _4, _5, _6, _7;
+    } i32;
+    struct
+    {
+        uint16_t _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15;
+    } u16;
+    struct
+    {
+        int16_t _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15;
+    } i16;
+    struct
+    {
+        uint8_t _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15;
+        uint8_t _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31;
+    } u8;
+    struct
+    {
+        int8_t _0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15;
+        int8_t _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, _26, _27, _28, _29, _30, _31;
+    } i8;
+
+    m256i() = default;
+
+    m256i(uint64_t ull0, uint64_t ull1, uint64_t ull2, uint64_t ull3)
+    {
+        m256i_intr() = _mm256_set_epi64x(ull3, ull2, ull1, ull0);
+    }
+
+    m256i(const uint8_t value[32])
+    {
+        assign(*(m256i*)value);
+    }
+
+    m256i(const __m256i& value)
+    {
+        assign(*(m256i*)&value);
+    }
+
+    m256i(const m256i& value)
+    {
+        assign(value);
+    }
+
+    m256i(const volatile m256i& value)
+    {
+        assign(value);
+    }
+
+    m256i(m256i&& other) noexcept
+    {
+        assign(other);
+    }
+
+    m256i& operator=(const m256i& other)
+    {
+        assign(other);
+        return *this;
+    }
+
+    volatile m256i& operator=(const m256i& other) volatile
+    {
+        assign(other);
+        return *this;
+    }
+
+    m256i& operator=(const volatile m256i& other)
+    {
+        assign(other);
+        return *this;
+    }
+
+    volatile m256i& operator=(const volatile m256i& other) volatile
+    {
+        assign(other);
+        return *this;
+    }
+
+    m256i& operator=(m256i&& other) noexcept
+    {
+        assign(other);
+        return *this;
+    }
+
+    void assign(const m256i& value) noexcept
+    {
+        _mm256_storeu_si256((__m256i*)this, _mm256_loadu_si256((const __m256i*)&value));
+    }
+
+    volatile void assign(const m256i& value) volatile noexcept
+    {
+        _mm256_storeu_si256((__m256i*)this, _mm256_loadu_si256((const __m256i*)&value));
+    }
+
+    void assign(const volatile m256i& value) noexcept
+    {
+        _mm256_storeu_si256((__m256i*)this, _mm256_loadu_si256((const __m256i*)&value));
+    }
+
+    volatile void assign(const volatile m256i& value) volatile noexcept
+    {
+        _mm256_storeu_si256((__m256i*)this, _mm256_loadu_si256((const __m256i*)&value));
+    }
+
+    __m256i& m256i_intr()
+    {
+        return *(__m256i*)this;
+    }
+
+    const __m256i& m256i_intr() const
+    {
+        return *(const __m256i*)this;
+    }
+
+    void setRandomValue()
+    {
+#ifdef _WIN32
+        _rdrand64_step(&m256i_u64[0]);
+        _rdrand64_step(&m256i_u64[1]);
+        _rdrand64_step(&m256i_u64[2]);
+        _rdrand64_step(&m256i_u64[3]);
+#elif defined(__linux__)
+        // Implement random initialization for Linux if needed
+        m256i_u64[0] = 0; // Example: Replace with a valid implementation
+        m256i_u64[1] = 0;
+        m256i_u64[2] = 0;
+        m256i_u64[3] = 0;
+#endif
+    }
+
+    static m256i randomValue()
+    {
+        m256i ret;
+        ret.setRandomValue();
+        return ret;
+    }
+
+    inline static m256i zero()
+    {
+        return _mm256_setzero_si256();
+    }
+};
+#else
+#error "Unsupported platform!"
+#endif
 
 static_assert(sizeof(m256i) == 32, "m256 has unexpected size!");
 

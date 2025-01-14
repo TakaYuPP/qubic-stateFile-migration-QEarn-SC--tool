@@ -192,7 +192,7 @@ int main() {
     try {
         // File paths
         const std::string oldStateFile = "contract0009.143";
-        const std::string newStateFile = "new_contract0009.143";
+        const std::string newStateFile = "contract0009.144";
 
         // Read the old state
         readOldState(oldStateFile);
