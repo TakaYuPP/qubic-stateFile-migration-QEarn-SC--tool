@@ -191,7 +191,7 @@ void writeNewState(const std::string& filename) {
 int main() {
     try {
         // File paths
-        const std::string oldStateFile = "contract0009.143";
+        const std::string oldStateFile = "contract0009.144";
         const std::string newStateFile = "contract0009.144";
 
         // Read the old state
