@@ -1,6 +1,12 @@
 #pragma once
 
-#include <intrin.h>
+#ifdef _WIN32
+#include <intrin.h> // Windows-specific intrinsics
+#elif defined(__linux__)
+#include <x86intrin.h> // Linux-specific intrinsics
+#else
+#error "Unsupported platform!"
+#endif
 
 // Used for all kinds of IDs, including in QPI and contracts.
 // Existing interface and behavior should never be changed! (However, it may be extended.)
